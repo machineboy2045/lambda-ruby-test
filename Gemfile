@@ -1,3 +1,3 @@
 source 'https://rubygems.org' do
-  gem 'activesupport'
+  gem 'aws-record', '~> 2'
 end
