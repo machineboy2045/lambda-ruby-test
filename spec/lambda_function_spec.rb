@@ -6,7 +6,7 @@ RSpec.describe "lambda_function" do
   end
 
   it "has db" do
-    expect(dynamo_client.list_tables.table_names).to eq(['users'])
+    expect(db.list_tables.table_names).to eq(['users'])
   end
 
   it "runs" do
