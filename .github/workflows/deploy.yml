@@ -8,16 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # - uses: ruby/setup-ruby@v1
-      # - uses: actions/cache@v2
-      #   with:
-      #     path: vendor/bundle
-      #     key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-      # - name: Build gems for AWS Lambda
-      #   run: |
-      #     bundle config set --local deployment 'true'
-      #     bundle config set --local without 'development'
-      #     docker run --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.7 bundle install --jobs 4 --retry 3
+      - uses: ruby/setup-ruby@v1
+      - uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Build gems for AWS Lambda
+        run: |
+          bundle config set --local deployment 'true'
+          bundle config set --local without 'development'
+          docker run --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.7 bundle install --jobs 4 --retry 3
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
