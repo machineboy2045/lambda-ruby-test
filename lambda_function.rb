@@ -10,6 +10,7 @@ end
 
 def lambda_handler(event:, context:)
   result = UsersTable.scan
+  items = result.page.map(&:to_h)
 
-  { statusCode: 200, body: JSON.generate(result) }
+  { statusCode: 200, body: JSON.generate(items) }
 end
