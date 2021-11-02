@@ -26,11 +26,6 @@ class UsersTable
 end
 
 def migrate
-  begin
-    return if UsersTable.scan
-  rescue StandardError
-  end
-
   migration = Aws::Record::TableMigration.new(UsersTable, client: dynamo_client)
   migration.create!(
     provisioned_throughput: {
