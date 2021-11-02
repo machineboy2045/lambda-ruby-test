@@ -3,30 +3,32 @@
 require 'json'
 require 'aws-record'
 
-def dynamo_client
-  if ENV['PROJECT_ENV'] == 'local'
-    Aws::DynamoDB::Client.new(
-      region: "local",
-      endpoint: 'http://localhost:8001',
-      access_key_id: "anykey-or-xxx",
-      secret_access_key: "anykey-or-xxx"
-    )
-  else
-    Aws::DynamoDB::Client.new
-  end
+def db
+  @db ||= if ENV['PROJECT_ENV'] == 'local'
+            Aws::DynamoDB::Client.new(
+              region: "local",
+              endpoint: 'http://localhost:8001',
+              access_key_id: "anykey-or-xxx",
+              secret_access_key: "anykey-or-xxx"
+            )
+          else
+            Aws::DynamoDB::Client.new
+          end
 end
 
 class UsersTable
   include Aws::Record
 
-  configure_client(client: dynamo_client)
+  configure_client(client: db)
   set_table_name 'users'
   string_attr :id, hash_key: true
   string_attr :name
 end
 
 def migrate
-  migration = Aws::Record::TableMigration.new(UsersTable, client: dynamo_client)
+  return if db.list_tables.table_names.include?('users')
+
+  migration = Aws::Record::TableMigration.new(UsersTable, client: db)
   migration.create!(
     provisioned_throughput: {
       read_capacity_units: 5,
