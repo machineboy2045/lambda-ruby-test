@@ -26,6 +26,11 @@ class UsersTable
 end
 
 def migrate
+  begin
+    return if UsersTable.scan
+  rescue StandardError
+  end
+
   migration = Aws::Record::TableMigration.new(UsersTable, client: dynamo_client)
   migration.create!(
     provisioned_throughput: {
@@ -36,7 +41,7 @@ def migrate
   migration.wait_until_available
 end
 
-def lambda_handler(_event: {}, _context: {})
+def lambda_handler(_event = {}, _context = {})
   { statusCode: 200, body: JSON.generate(index) }
 end
 

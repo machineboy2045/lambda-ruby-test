@@ -6,6 +6,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    services:
+      dynamodb-local:
+        command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+        image: "amazon/dynamodb-local:latest"
+        container_name: dynamodb-local
+        ports:
+          - "8001:8000"
+        volumes:
+          - "./docker/dynamodb:/home/dynamodblocal/data"
+        working_dir: /home/dynamodblocal
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
@@ -18,6 +28,11 @@ jobs:
           bundle config set --local deployment 'true'
           bundle config set --local without 'development'
           docker run --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.7 bundle install --jobs 4 --retry 3
+      - name: Run tests
+        env:
+          PROJECT_ENV: local
+        run: |
+          bundle exec rspec
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
