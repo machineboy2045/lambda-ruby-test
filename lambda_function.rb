@@ -14,5 +14,5 @@ def lambda_handler(event:, context:)
   dynamodb_client = Aws::DynamoDB::Client.new(region: region)
   result = dynamodb_client.scan(table_name: 'http-crud-tutorial-items')
 
-  { statusCode: 200, body: { items_2: result.items } }
+  { statusCode: 200, body: { items: result.items } }
 end
