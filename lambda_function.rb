@@ -69,10 +69,16 @@ class UsersController
   end
 end
 
+def log(hash)
+  puts JSON.generate(hash)
+end
+
 def lambda_handler(event = {}, _context = {})
-  _resource = event.dig(:event, 'resource')
+  resource = event.dig(:event, 'resource')
   http_method = event.dig(:event, 'httpMethod')
   params = event.dig(:event, 'queryStringParameters')
+
+  log({ resource: resource, http_method: http_method, params: params })
 
   controller = UsersController.new
 
