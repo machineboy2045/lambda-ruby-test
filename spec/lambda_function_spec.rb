@@ -2,22 +2,28 @@ require './lambda_function'
 
 RSpec.describe 'lambda_function' do
   before do
-    migrate
-  end
-  let(:event) do
-    { event: { requestContext: { stage: 'test' } } }
-  end
-  let(:context) do
-    {}
+    $db.clear
+    $db.migrate
   end
 
-  subject { lambda_handler(event, context) }
+  describe 'users' do
+    it 'creates' do
+      lambda_handler({
+        event: {
+          'resource' => '/users',
+          'httpMethod' => 'POST',
+          'queryStringParameters' => { 'name' => 'Will' }
+        }
+      })
 
-  it 'has db' do
-    expect(db.list_tables.table_names).to eq(['users'])
-  end
+      response = lambda_handler({
+        event: {
+          'resource' => '/users',
+          'httpMethod' => 'GET'
+        }
+      })
 
-  it 'runs' do
-    expect(subject.keys.sort).to eq([:body, :statusCode])
+      expect(JSON.parse(response[:body]).first['name']).to eq('Will')
+    end
   end
 end
