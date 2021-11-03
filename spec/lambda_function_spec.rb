@@ -2,8 +2,8 @@ require './lambda_function'
 
 RSpec.describe 'lambda_function' do
   before do
-    $db.clear
-    $db.migrate
+    $database.clear
+    $database.migrate
   end
 
   describe 'users' do
@@ -12,7 +12,7 @@ RSpec.describe 'lambda_function' do
         event: {
           'resource' => '/users',
           'httpMethod' => 'POST',
-          'queryStringParameters' => { 'name' => 'Will' }
+          'queryStringParameters' => { 'name' => 'Billy Bob' }
         }
       })
 
@@ -23,7 +23,7 @@ RSpec.describe 'lambda_function' do
         }
       })
 
-      expect(JSON.parse(response[:body]).first['name']).to eq('Will')
+      expect(JSON.parse(response[:body]).first['name']).to eq('Billy Bob')
     end
   end
 end
