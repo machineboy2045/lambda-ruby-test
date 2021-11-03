@@ -1,4 +1,9 @@
 # frozen_string_literal: true
+
+PROJECT_NAME = 'FulfillmentApi'
+PROJECT_ENV = ENV['PROJECT_ENV']
+TABLE_PREFIX = "#{PROJECT_NAME}-#{PROJECT_ENV}-"
+
 require 'json'
 require 'aws-record'
 require 'securerandom'
@@ -17,5 +22,8 @@ def lambda_handler(event = {}, _context = {})
 
   Utils.log({ resource: resource, http_method: http_method, params: params })
 
-  UsersController.call(http_method: http_method, params: params)
+  case resource
+  when '/users'
+    UsersController.call(http_method: http_method, params: params)
+  end
 end

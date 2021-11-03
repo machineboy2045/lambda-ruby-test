@@ -2,6 +2,7 @@ require './lambda_function'
 
 RSpec.describe 'lambda_function' do
   before do
+    ENV['PROJECT_ENV'] = 'test'
     $database.clear
     $database.migrate
   end
