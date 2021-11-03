@@ -13,6 +13,7 @@ class Db
 
   def clear
     Aws::Record::TableMigration.new(UsersTable, client: client).delete!
+  rescue Aws::Record::Errors::TableDoesNotExist
   end
 
   def migrate
