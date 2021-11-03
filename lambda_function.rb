@@ -55,15 +55,17 @@ class UsersTable
 end
 
 class UsersController
+  HEADERS = { 'Access-Control-Allow-Origin' => '*' }.freeze
+
   def create(params)
     result = UsersTable.new(id: SecureRandom.uuid, name: params['name']).save
-    { statusCode: 200, body: JSON.generate(result) }
+    { statusCode: 200, body: JSON.generate(result), headers: HEADERS }
   end
 
   def index
     result = UsersTable.scan
     items = result.page.map(&:to_h)
-    { statusCode: 200, body: JSON.generate(items) }
+    { statusCode: 200, body: JSON.generate(items), headers: HEADERS }
   end
 end
 
