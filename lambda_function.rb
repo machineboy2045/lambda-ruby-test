@@ -38,8 +38,9 @@ def migrate
   migration.wait_until_available
 end
 
-def lambda_handler(_event = {}, _context = {})
-  { statusCode: 200, body: JSON.generate(index) }
+def lambda_handler(event = {}, _context = {})
+  resource_path = event.dig(:event, 'requestContext', 'resourcePath')
+  { statusCode: 200, body: JSON.generate(resource_path) }
 end
 
 def create(id:, name:)
