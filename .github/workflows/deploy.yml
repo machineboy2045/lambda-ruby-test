@@ -22,6 +22,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
       - uses: rrainn/dynamodb-action@v2.0.0
         with:
           port: 8001
@@ -47,6 +48,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
       - name: Zip
         uses: montudor/action-zip@v0.1.0
         with:
