@@ -1,42 +1,10 @@
 on:
-  push:
-    branches:
-      - "master"
+  workflow-call:
+    inputs:
+      lambda_function_name:
+        required: true
 
 jobs:
-  rubocop:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ruby/setup-ruby@v1
-    - name: Run Rubocop
-      run: |
-        gem install rubocop
-        rubocop --parallel
-  rspec:
-    needs: rubocop
-    runs-on: ubuntu-latest
-    env:
-      PROJECT_ENV: test
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ruby/setup-ruby@v1
-      - uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-      - uses: rrainn/dynamodb-action@v2.0.0
-        with:
-          port: 8001
-          cors: '*'
-      - name: Build gems for AWS Lambda
-        run: |
-          bundle config set --local deployment 'true'
-          bundle config set --local without 'development'
-          docker run --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.7 bundle install --jobs 4 --retry 3
-      - name: Run tests
-        run: |
-          bundle exec rspec
   deploy-to-lambda:
     needs: rspec
     runs-on: ubuntu-latest
@@ -57,5 +25,5 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: us-east-2
-          function_name: fulfillments-api
+          function_name: ${{ inputs.lambda_function_name }}
           zip_file: bundle.zip
