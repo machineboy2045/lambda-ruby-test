@@ -36,7 +36,6 @@ jobs:
         env:
           PROJECT_ENV: local
         run: |
-          bundle add rspec
           bundle exec rspec
           bundle remove rspec
   deploy-to-lambda:
