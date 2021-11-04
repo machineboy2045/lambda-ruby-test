@@ -4,7 +4,37 @@ on:
       - "master"
 
 jobs:
-  deploy:
+  rubocop-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-ruby@v1
+      - name: Run Rubocop
+        run: |
+          gem install rubocop
+          rubocop --parallel
+  rspec-test:
+    needs: rubocop-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-ruby@v1
+      - uses: rrainn/dynamodb-action@v2.0.0
+        with:
+          port: 8001
+          cors: '*'
+      # - name: Install dependencies
+      #   run: |
+      #     gem install bundler
+      #     bundler install
+      - name: Run tests
+        env:
+          PROJECT_ENV: local
+        run: |
+          bundle install
+          bundle exec rspec
+  deploy-to-lambda:
+    needs: rspec-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,30 +43,16 @@ jobs:
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-      - uses: rrainn/dynamodb-action@v2.0.0
-        with:
-          port: 8001
-          cors: '*'
-      - name: Run RuboCop
-        run: |
-          gem install rubocop
-          rubocop --parallel
-      - name: Build gems for AWS Lambda
+      - name: Build gems
         run: |
           bundle config set --local deployment 'true'
           bundle config set --local without 'development'
           docker run --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.7 bundle install --jobs 4 --retry 3
-      - name: Run tests
-        env:
-          PROJECT_ENV: local
-        run: |
-          gem install rspec
-          bundle exec rspec
-      - name: zip
+      - name: Zip
         uses: montudor/action-zip@v0.1.0
         with:
           args: zip -qq -r ./bundle.zip ./
-      - name: default deploy
+      - name: Deploy
         uses: appleboy/lambda-action@master
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
