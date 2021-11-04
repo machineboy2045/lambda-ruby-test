@@ -6,8 +6,10 @@ on:
 jobs:
   test:
     uses: machineboy2045/lambda-ruby-test/.github/workflows/test.yml@master
-  deploy-to-lambda:
+  deploy:
     needs: test
     uses: machineboy2045/lambda-ruby-test/.github/workflows/deploy.yml@master
     with:
       lambda_function_name: fulfillments-api
+      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
