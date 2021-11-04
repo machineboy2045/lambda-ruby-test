@@ -9,43 +9,34 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
+        with:
+          bundler-cache: true
       - name: Run Rubocop
-        run: |
-          gem install rubocop
-          rubocop --parallel
+        run: rubocop --parallel
   rspec-test:
     needs: rubocop-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
+        with:
+          bundler-cache: true
       - uses: rrainn/dynamodb-action@v2.0.0
         with:
           port: 8001
           cors: '*'
-      - name: Install dependencies
-        run: |
-          bundle install --jobs 4 --retry 3
       - name: Run tests
         env:
           PROJECT_ENV: local
-        run: |
-          bundle exec rspec
+        run: bundle exec rspec
   deploy-to-lambda:
     needs: rspec-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
-      - uses: actions/cache@v2
         with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-      - name: Build gems
-        run: |
-          bundle config set --local deployment 'true'
-          bundle config set --local without 'development'
-          docker run --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.7 bundle install --jobs 4 --retry 3
+          bundler-cache: true
       - name: Zip
         uses: montudor/action-zip@v0.1.0
         with:

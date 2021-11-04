@@ -5,5 +5,6 @@ source 'https://rubygems.org' do
 
   group :development do
     gem 'rspec'
+    gem 'rubocop'
   end
 end
