@@ -3,6 +3,7 @@ on:
     inputs:
       lambda_function_name:
         required: true
+        type: string
 
 jobs:
   deploy-to-lambda:
