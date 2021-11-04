@@ -12,7 +12,7 @@ jobs:
         with:
           bundler-cache: true
       - name: Run Rubocop
-        run: rubocop --parallel
+        run: bundle exec rubocop --parallel
   rspec-test:
     needs: rubocop-test
     runs-on: ubuntu-latest
