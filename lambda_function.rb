@@ -3,13 +3,14 @@
 PROJECT_NAME = 'FulfillmentApi'
 PROJECT_ENV = ENV['PROJECT_ENV']
 TABLE_PREFIX = "#{PROJECT_NAME}-#{PROJECT_ENV}-"
+HTTP_HEADERS = { 'Access-Control-Allow-Origin' => '*' }.freeze
 
 require 'json'
 require 'aws-record'
 require 'securerandom'
 
 require './config/database'
-$database = Database.new
+DATABASE = Database.new
 
 require './models/user'
 require './controllers/users_controller'
@@ -24,6 +25,12 @@ def lambda_handler(event = {}, _context = {})
 
   case resource
   when '/users'
-    UsersController.call(http_method: http_method, params: params)
+    controller = UsersController.new
+    case http_method
+    when 'POST'
+      controller.create(params)
+    when 'GET'
+      controller.index
+    end
   end
 end

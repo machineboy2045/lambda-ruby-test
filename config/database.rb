@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Database
   attr_reader :client
 
@@ -8,6 +10,7 @@ class Database
   def clear
     Aws::Record::TableMigration.new(User, client: client).delete!
   rescue Aws::Record::Errors::TableDoesNotExist
+    false
   end
 
   def migrate
