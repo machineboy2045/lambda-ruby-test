@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
 require './lambda_function'
 
 RSpec.describe 'lambda_function' do
