@@ -23,15 +23,13 @@ jobs:
         with:
           port: 8001
           cors: '*'
-      # - name: Install dependencies
-      #   run: |
-      #     gem install bundler
-      #     bundler install
+      - name: Install dependencies
+        run: |
+          bundle install --jobs 4 --retry 3
       - name: Run tests
         env:
           PROJECT_ENV: local
         run: |
-          bundle install
           bundle exec rspec
   deploy-to-lambda:
     needs: rspec-test
