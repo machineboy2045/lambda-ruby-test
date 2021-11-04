@@ -37,7 +37,6 @@ jobs:
           PROJECT_ENV: local
         run: |
           bundle exec rspec
-          bundle remove rspec
   deploy-to-lambda:
     needs: rspec
     runs-on: ubuntu-latest
