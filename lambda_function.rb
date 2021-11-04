@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 PROJECT_NAME = 'FulfillmentApi'
-PROJECT_ENV = ENV['PROJECT_ENV']
+PROJECT_ENV = ENV['PROJECT_ENV'] || 'development'
 TABLE_PREFIX = "#{PROJECT_NAME}-#{PROJECT_ENV}-"
 HTTP_HEADERS = { 'Access-Control-Allow-Origin' => '*' }.freeze
 

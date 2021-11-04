@@ -3,11 +3,11 @@ https://gzzn1dr3wf.execute-api.us-east-2.amazonaws.com/test/users
 
 ```bash
 # Open console
-PROJECT_ENV=local bundle exec irb -r ./lambda_function.rb
+bundle exec irb -r ./lambda_function.rb
 
 # Run tests
 docker-compose up -d
-PROJECT_ENV=local bundle exec rspec
+bundle exec rspec
 
 # curl examples
 curl -X GET "https://gzzn1dr3wf.execute-api.us-east-2.amazonaws.com/production/users"

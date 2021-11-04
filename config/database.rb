@@ -27,7 +27,7 @@ class Database
   private
 
   def init_client
-    if ENV['PROJECT_ENV'] == 'local'
+    if PROJECT_ENV =~ /test|development/
       Aws::DynamoDB::Client.new(
         region: 'local',
         endpoint: 'http://localhost:8001',

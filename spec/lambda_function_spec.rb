@@ -5,7 +5,6 @@ require './lambda_function'
 
 RSpec.describe 'lambda_function' do
   before do
-    ENV['PROJECT_ENV'] = 'test'
     DATABASE.clear
     DATABASE.migrate
   end
