@@ -4,10 +4,12 @@ on:
       - "master"
 
 jobs:
+  env:
+    BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
   rubocop-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/setup-ruby@v1
         with:
           bundler-cache: true
@@ -17,7 +19,7 @@ jobs:
     needs: rubocop-test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/setup-ruby@v1
         with:
           bundler-cache: true
