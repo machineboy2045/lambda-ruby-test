@@ -17,19 +17,20 @@ jobs:
         with:
           port: 8001
           cors: '*'
+      - name: Run RuboCop
+        run: |
+          gem install rubocop
+          rubocop --parallel
       - name: Build gems for AWS Lambda
         run: |
           bundle config set --local deployment 'true'
           bundle config set --local without 'development'
           docker run --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.7 bundle install --jobs 4 --retry 3
-      - name: Run RuboCop
-        run: |
-          gem install rubocop
-          rubocop --parallel
       - name: Run tests
         env:
           PROJECT_ENV: local
         run: |
+          gem install rspec
           bundle exec rspec
       - name: zip
         uses: montudor/action-zip@v0.1.0
