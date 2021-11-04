@@ -13,7 +13,6 @@ require './config/database'
 DATABASE = Database.new
 
 require './models/user'
-require './controllers/users_controller'
 require './lib/utils'
 
 def lambda_handler(event = {}, _context = {})
@@ -25,12 +24,11 @@ def lambda_handler(event = {}, _context = {})
 
   case resource
   when '/users'
-    controller = UsersController.new
     case http_method
     when 'POST'
-      controller.create(params)
+      User.create(params)
     when 'GET'
-      controller.index
+      User.list
     end
   end
 end
