@@ -23,7 +23,7 @@ def lambda_handler(event = {}, _context = {})
 
   Utils.log({ resource: resource, http_method: http_method, params: params, stage: stage })
 
-  configure(stage)
+  Database.new(stage)
 
   case resource
   when '/users'
@@ -34,10 +34,4 @@ def lambda_handler(event = {}, _context = {})
       User.list
     end
   end
-end
-
-def configure(stage)
-  db = Database.new(stage)
-  User.configure_client(client: db.client)
-  User.set_table_name("#{PROJECT_NAME}-#{stage}-users")
 end

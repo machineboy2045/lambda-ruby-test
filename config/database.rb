@@ -7,6 +7,7 @@ class Database
     raise 'stage is required' unless stage
 
     @client = init_client(stage)
+    configure_tables(stage)
   end
 
   def clear
@@ -39,5 +40,10 @@ class Database
     else
       Aws::DynamoDB::Client.new
     end
+  end
+
+  def configure_tables(stage)
+    User.configure_client(client: client)
+    User.set_table_name("#{PROJECT_NAME}-#{stage}-users")
   end
 end
