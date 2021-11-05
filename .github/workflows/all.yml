@@ -1,5 +1,0 @@
-on: push
-
-jobs:
-  test:
-    uses: machineboy2045/lambda-ruby-test/.github/workflows/test.yml@master
