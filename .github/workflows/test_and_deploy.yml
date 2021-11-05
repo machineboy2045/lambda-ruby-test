@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    uses: machineboy2045/lambda-ruby-test/.github/workflows/deploy_lambda.yml@master
+    uses: machineboy2045/lambda-ruby-test/.github/workflows/test.yml@master
   deploy:
     needs: test
     uses: machineboy2045/lambda-ruby-test/.github/workflows/deploy_lambda.yml@master
