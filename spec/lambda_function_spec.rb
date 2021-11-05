@@ -4,9 +4,11 @@ require 'spec_helper'
 require './lambda_function'
 
 RSpec.describe 'lambda_function' do
+  let(:stage) { ENVS[:test] }
   before do
-    DATABASE.clear
-    DATABASE.migrate
+    db = Database.new(stage)
+    db.clear
+    db.migrate
   end
 
   describe 'users' do
@@ -14,6 +16,7 @@ RSpec.describe 'lambda_function' do
       lambda_handler(
         {
           event: {
+            'requestContext' => { 'stage' => stage },
             'resource' => '/users',
             'httpMethod' => 'POST',
             'queryStringParameters' => { 'name' => 'Billy Bob' }
@@ -24,6 +27,7 @@ RSpec.describe 'lambda_function' do
       response = lambda_handler(
         {
           event: {
+            'requestContext' => { 'stage' => stage },
             'resource' => '/users',
             'httpMethod' => 'GET'
           }

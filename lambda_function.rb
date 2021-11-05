@@ -1,26 +1,29 @@
 # frozen_string_literal: true
 
-PROJECT_NAME = 'FulfillmentApi'
-PROJECT_ENV = ENV['PROJECT_ENV'] || 'development'
-TABLE_PREFIX = "#{PROJECT_NAME}-#{PROJECT_ENV}-"
-HTTP_HEADERS = { 'Access-Control-Allow-Origin' => '*' }.freeze
-
 require 'json'
 require 'aws-record'
 require 'securerandom'
-
 require './config/database'
-DATABASE = Database.new
-
 require './models/user'
 require './lib/utils'
+
+PROJECT_NAME = 'FulfillmentApi'
+HTTP_HEADERS = { 'Access-Control-Allow-Origin' => '*' }.freeze
+ENVS = {
+  test: 'test',
+  dev: 'dev',
+  prod: 'prod'
+}.freeze
 
 def lambda_handler(event = {}, _context = {})
   resource = event.dig(:event, 'resource')
   http_method = event.dig(:event, 'httpMethod')
   params = event.dig(:event, 'queryStringParameters')
+  stage = event.dig(:event, 'requestContext', 'stage') || ENVS[:dev]
 
-  Utils.log({ resource: resource, http_method: http_method, params: params })
+  Utils.log({ resource: resource, http_method: http_method, params: params, stage: stage })
+
+  configure(stage)
 
   case resource
   when '/users'
@@ -31,4 +34,10 @@ def lambda_handler(event = {}, _context = {})
       User.list
     end
   end
+end
+
+def configure(stage)
+  db = Database.new(stage)
+  User.configure_client(client: db.client)
+  User.set_table_name("#{PROJECT_NAME}-#{stage}-users")
 end

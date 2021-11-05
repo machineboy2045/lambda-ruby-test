@@ -3,8 +3,10 @@
 class Database
   attr_reader :client
 
-  def initialize
-    @client = init_client
+  def initialize(stage)
+    raise 'stage is required' unless stage
+
+    @client = init_client(stage)
   end
 
   def clear
@@ -26,8 +28,8 @@ class Database
 
   private
 
-  def init_client
-    if PROJECT_ENV =~ /test|development/
+  def init_client(stage)
+    if stage == ENVS[:test]
       Aws::DynamoDB::Client.new(
         region: 'local',
         endpoint: 'http://localhost:8001',
