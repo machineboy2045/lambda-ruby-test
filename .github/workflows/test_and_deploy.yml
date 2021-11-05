@@ -11,9 +11,10 @@ jobs:
     uses: machineboy2045/lambda-ruby-test/.github/workflows/test.yml@master
   deploy:
     needs: test
+    uses: rlespinasse/github-slug-action@v3.x
     uses: machineboy2045/lambda-ruby-test/.github/workflows/deploy_lambda.yml@master
     with:
-      lambda_function_name: fulfillments-api-${{ github.head_ref }}
+      lambda_function_name: fulfillments-api-${{ env.GITHUB_REF_NAME }}
     secrets:
       aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
