@@ -1,7 +1,8 @@
-workflow_run:
-  workflows: ["test"]
-  branches: [master]
-  types: [completed]
+on:
+  workflow_run:
+    workflows: ["test"]
+    branches: [master]
+    types: [completed]
 
 jobs:
   deploy:
