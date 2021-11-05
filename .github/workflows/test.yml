@@ -28,7 +28,7 @@ jobs:
         with:
           port: 8001
           cors: '*'
-          dbPath: ./data
+          dbPath: '.'
       - name: Build gems for AWS Lambda
         run: |
           bundle config set --local deployment 'true'
