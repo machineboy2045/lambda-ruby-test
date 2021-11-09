@@ -1,5 +1,5 @@
 # lambda-ruby-test
-https://gzzn1dr3wf.execute-api.us-east-2.amazonaws.com/production/users
+https://gzzn1dr3wf.execute-api.us-east-2.amazonaws.com/prod/users
 
 ```bash
 # Start local dynamodb
