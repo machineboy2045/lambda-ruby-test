@@ -1,6 +1,9 @@
 on:
   workflow_call:
     inputs:
+      region:
+        required: true
+        type: string
       s3_bucket:
         required: true
         type: string
