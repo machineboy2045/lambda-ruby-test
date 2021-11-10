@@ -25,18 +25,14 @@ jobs:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
 
-      - name: Zip lambda
-        uses: montudor/action-zip@v0.1.0
-        with:
-          args: zip -qq -r ./bundle.zip ./
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.aws_access_key_id }}
           aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
-          aws-region: ${{ github.event.inputs.region}}
+          aws-region: ${{ inputs.region}}
 
-      - name: Copy zip to S3 with the AWS CLI
+      - name: Zip and upload to S3
         run: |
+          zip -q -r ./bundle.zip ./
           aws s3 cp ./bundle.zip s3://${{ inputs.s3_bucket }}
