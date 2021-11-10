@@ -13,7 +13,7 @@ jobs:
     needs: test
     uses: machineboy2045/lambda-ruby-test/.github/workflows/deploy_lambda.yml@master
     with:
-      lambda_function_name: fulfillments-api
+      s3_bucket: fulfillments-api-lambda
     secrets:
       aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

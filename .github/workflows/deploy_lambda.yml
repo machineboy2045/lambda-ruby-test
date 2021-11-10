@@ -1,7 +1,7 @@
 on:
   workflow_call:
     inputs:
-      lambda_function_name:
+      s3_bucket:
         required: true
         type: string
     secrets:
@@ -21,15 +21,19 @@ jobs:
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-      - name: Zip
+
+      - name: Zip lambda
         uses: montudor/action-zip@v0.1.0
         with:
           args: zip -qq -r ./bundle.zip ./
-      - name: Deploy
-        uses: appleboy/lambda-action@master
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws_access_key_id: ${{ secrets.aws_access_key_id }}
-          aws_secret_access_key: ${{ secrets.aws_secret_access_key }}
-          aws_region: us-east-2
-          function_name: ${{ inputs.lambda_function_name }}-${{ env.GITHUB_REF_NAME }}
-          zip_file: bundle.zip
+          aws-access-key-id: ${{ secrets.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          aws-region: ${{ github.event.inputs.region}}
+
+      - name: Copy zip to S3 with the AWS CLI
+        run: |
+          aws s3 cp ./bundle.zip s3://${{ inputs.s3_bucket }}
