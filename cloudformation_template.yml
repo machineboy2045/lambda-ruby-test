@@ -98,6 +98,25 @@ Resources:
                 Action: 'lambda:*'
                 Resource: !GetAtt LambdaFunction.Arn
 
+  myDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: "ID"
+          AttributeType: "S"
+        -
+          AttributeName: "Name"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "ID"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: "myTableName"
+
   LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -125,3 +144,11 @@ Resources:
             Action:
               - 'sts:AssumeRole'
       Path: '/'
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action: 'dynamodb:*'
+                Resource: !GetAtt myDynamoDBTable.Arn
