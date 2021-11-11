@@ -23,15 +23,17 @@ def lambda_handler(event = {}, _context = {})
 
   Utils.log({ resource: resource, http_method: http_method, params: params, stage: stage })
 
-  Database.new(stage)
+  { statusCode: 200, body: JSON.generate({ message: 'Hello world' }), headers: HTTP_HEADERS }
 
-  case resource
-  when '/users'
-    case http_method
-    when 'POST'
-      User.create(params)
-    when 'GET'
-      User.list
-    end
-  end
+  # Database.new(stage)
+
+  # case resource
+  # when '/users'
+  #   case http_method
+  #   when 'POST'
+  #     User.create(params)
+  #   when 'GET'
+  #     User.list
+  #   end
+  # end
 end

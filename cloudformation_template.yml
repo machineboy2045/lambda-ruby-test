@@ -31,6 +31,7 @@ Resources:
       HttpMethod: GET
       Integration:
         IntegrationHttpMethod: POST
+        Credentials: !GetAtt ApiGatewayIamRole.Arn
         Type: AWS_PROXY
         Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations'
       OperationName: 'lambda'
@@ -45,6 +46,7 @@ Resources:
       HttpMethod: POST
       Integration:
         IntegrationHttpMethod: POST
+        Credentials: !GetAtt ApiGatewayIamRole.Arn
         Type: AWS_PROXY
         Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations'
       OperationName: 'lambda'
