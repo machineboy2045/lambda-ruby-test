@@ -38,7 +38,7 @@ jobs:
           aws s3 cp ./bundle.zip s3://${{ inputs.s3_bucket }}
 
       - name: Deploy Cloudformation
-        uses: aws-actions/aws-cloudformation-github-deploy@master
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: FulfillmentsApi-${{env.GITHUB_REF_NAME}}
           template: cloudformation_template.yml
