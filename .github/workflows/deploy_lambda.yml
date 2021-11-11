@@ -36,3 +36,10 @@ jobs:
         run: |
           zip -q -r ./bundle.zip ./
           aws s3 cp ./bundle.zip s3://${{ inputs.s3_bucket }}
+
+      - name: Deploy Cloudformation
+        uses: aws-actions/aws-cloudformation-github-deploy@master
+        with:
+          name: FulfillmentsApi-${{env.GITHUB_REF_NAME}}
+          template: cloudformation_template.yml
+          no-fail-on-empty-changeset: "1"
