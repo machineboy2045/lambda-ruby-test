@@ -105,16 +105,13 @@ Resources:
         -
           AttributeName: "ID"
           AttributeType: "S"
-        -
-          AttributeName: "Name"
-          AttributeType: "S"
       KeySchema:
         -
           AttributeName: "ID"
           KeyType: "HASH"
       ProvisionedThroughput:
-        ReadCapacityUnits: "5"
-        WriteCapacityUnits: "5"
+        ReadCapacityUnits: "1"
+        WriteCapacityUnits: "1"
       TableName: "myTableName"
 
   LambdaFunction:
