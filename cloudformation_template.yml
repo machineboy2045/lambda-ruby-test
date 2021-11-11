@@ -23,7 +23,7 @@ Resources:
       PathPart: 'users'
       RestApiId: !Ref ApiGatewayRestApi
 
-  ApiGatewayMethod:
+  ApiGatewayMethodListUsers:
     Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: false
@@ -41,7 +41,7 @@ Resources:
       ResourceId: !Ref ApiGatewayResource
       RestApiId: !Ref ApiGatewayRestApi
 
-  ApiGatewayMethod:
+  ApiGatewayMethodCreateUser:
     Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: false
